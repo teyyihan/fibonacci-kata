@@ -47,4 +47,43 @@ public class Calculator {
 
         return integers.stream().reduce(0, Integer::sum);
     }
+
+    int addMultipleNumbersWithNewLine(String input) {
+		String[] numbers = input.split("[,\n]");
+		List<Integer> integers = Arrays.stream(numbers).map(Integer::parseInt).collect(Collectors.toList());
+
+		if (integers.size() == 1) return integers.get(0);
+
+		return integers.stream().reduce(0, Integer::sum);
+    }
+
+    int addMultipleNumbersCustomSeparator(String input) {
+		var regexp = ",|\n";
+
+		var customSeparator = findCustomSeparator(input);
+		regexp = regexp.replace(",", customSeparator);
+
+		return findSumWithRegexp(removeCustomSeparatorFrom(input), regexp);
+    }
+
+	private String removeCustomSeparatorFrom(final String input) {
+		return input.substring(input.indexOf("\n")+1);
+	}
+
+	private int findSumWithRegexp(final String input, final String regexp) {
+		if (input.length() == 0) return 0;
+
+		String[] numbers = input.split(regexp);
+		List<Integer> integers = Arrays.stream(numbers).map(Integer::parseInt).collect(Collectors.toList());
+
+		if (integers.size() == 1) return integers.get(0);
+
+		return integers.stream().reduce(0, Integer::sum);
+	}
+
+	private String findCustomSeparator(final String input) {
+		if (!input.startsWith("//") || !input.contains("\n")) throw new IllegalStateException();
+
+		return input.substring(2, input.indexOf("\n"));
+	}
 }
